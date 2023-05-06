@@ -1,0 +1,39 @@
+Web:
+  CMD: "./CS_system --ip 127.0.0.1 --port 8080 --config_path ./conf/store_servers.conf" # 根据自己的实际需要更改
+  URL: "http://localhost:8080"
+
+Store: # 二选一开启即可
+  2PC: 
+    Status: true
+    CMD:
+      # 集群一
+      - ./CS_system --kvconfig_path ./conf/coordinator.conf
+      - ./CS_system --kvconfig_path ./conf/coordinator1.conf
+      - ./CS_system --kvconfig_path ./conf/coordinator2.conf
+      - ./CS_system --kvconfig_path ./conf/coordinator3.conf
+      # 集群二
+      - ./CS_system --kvconfig_path ./conf/tcoordinator.conf
+      - ./CS_system --kvconfig_path ./conf/tcoordinator1.conf
+      - ./CS_system --kvconfig_path ./conf/tcoordinator2.conf
+      - ./CS_system --kvconfig_path ./conf/tcoordinator3.conf
+  RAFT: 
+    Status: false
+    CMD:
+
+Balancer:
+  Status: false # 是否开启负载均衡器
+  CMD: "./load-balancer --ip 127.0.0.1 --port 8080 --store_config_path ./conf/store_servers.conf --web_config_path ./conf/web_servers.conf" # 根据自己的实际需要更改
+  URL: "http://localhost:8080"
+  Web: # web-server的集群启动命令
+    - "./web-server01 --ip 127.0.0.1 --port 8081 --config_path ./conf/store_servers.conf"
+    - "./web-server02 --ip 127.0.0.1 --port 8082 --config_path ./conf/store_servers.conf"
+    - "./web-server03 --ip 127.0.0.1 --port 8083 --config_path ./conf/store_servers.conf"
+
+Static:
+  Course: "./static/courses.txt"
+  Student: "./static/students.txt"
+  RootPath: "/home/lab4"
+  Build: "make"
+  Clean: "make clean"
+  Debug: false # 输出你的程序的输出
+  HttpDebug: true # 输出http相关信息
