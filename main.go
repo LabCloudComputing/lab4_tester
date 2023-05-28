@@ -216,6 +216,7 @@ func main() {
 	if config.GetBalancer().Status {
 		balanceCmd = startProcess(config.GetStatic().RootPath, config.GetBalancer().CMD)
 		url = config.GetBalancer().URL
+		balanceWebCmd = make([]*exec.Cmd, webNum)
 		for i := 0; i < webNum; i++ {
 			balanceWebCmd[i] = startProcess(config.GetStatic().RootPath, config.GetStore().TPC.CMD[i])
 		}
